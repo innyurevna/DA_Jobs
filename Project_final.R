@@ -2,6 +2,8 @@ library(ggplot2)
 library(dplyr)
 library(tidyr)
 library(stringr)
+
+
 df <- as_tibble(read.csv("DataAnalyst.csv"))
 df[df == -1] <- NA
 glimpse(df)

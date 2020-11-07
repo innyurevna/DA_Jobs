@@ -9,26 +9,26 @@ df[df == -1] <- NA
 glimpse(df)
 
 df <- df %>%
-  mutate(Location = gsub(" Arapahoe,", "", Location),
-         Company.Name = gsub("[[:digit:].[:digit:]]", "", Company.Name), 
-         Salary.Estimate = gsub("[\\$Ka-zA-Z\\(.*\\)]", "", Salary.Estimate),
-         Revenue = gsub(" \\(.*\\)", "", Revenue),
-         Job.Title = tolower(Job.Title),
-         Job.Description = tolower(Job.Description)) %>%
-  separate(Salary.Estimate, c("Low_bar.Salary", "High_bar.Salary"), "-", convert = TRUE) %>%
-  separate(Location, c("City", "State"), ",") %>% 
+  mutate(location = gsub(" Arapahoe,", "", Location),
+         cname = gsub("[[:digit:].[:digit:]]", "", Company.Name), 
+         salary_est = gsub("[\\$Ka-zA-Z\\(.*\\)]", "", Salary.Estimate),
+         revenue = gsub(" \\(.*\\)", "", Revenue),
+         job_title = tolower(Job.Title),
+         job_desc = tolower(Job.Description)) %>%
+  separate(salary_est, c("salary_low", "salary_high"), "-", convert = TRUE) %>%
+  separate(location, c("city", "state"), ",") %>% 
   mutate_if(is.character, as.factor) %>% 
   mutate_at(c(2,5), as.character) %>%
   rename(id = X)
 
-test <- mutate(df, Revenue = gsub(" \\(.*\\)", "", Revenue))
+test <- mutate(df, revenue = gsub(" \\(.*\\)", "", revenue))
 
-df %>% filter(str_detect(Location, "Arapahoe")) -> case
+df %>% filter(str_detect(location, "Arapahoe")) -> case
 
 # Analysis
 
 install.packages("todor")
-
+# TODO: SOMETHING
 
 
 

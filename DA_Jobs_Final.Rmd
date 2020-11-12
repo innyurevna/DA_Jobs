@@ -61,6 +61,11 @@ df <- df %>%
 * Variables types has been changed accordingly.
 * Column x has been renamed as “id”.
 
+```{r}
+glimpse(df)
+```
+
+
 ## Analysis
 
 

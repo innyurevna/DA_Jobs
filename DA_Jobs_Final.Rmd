@@ -1,0 +1,75 @@
+---
+title: "DA_Jobs_Text"
+output: html_document
+---
+
+# Introduction
+
+Hi! My name is Inna Krivchenko and I am beginner analyst. I am looking for suitable job position now and would be happy to demonstrate my skills on "Data Analyst jobs”, which is an intriguing dataset of analyst vacancies from Glasdoor. As a beginner analyst, I am eager to find some useful insides answering several questions:
+
+Which jobs are the best judging by salary, company rating and location?
+
+## Cleaning data
+
+As I have learned from different courses, it is important to make sure your data has right and useful format. It is also crucial for the future analysis results to look at your data closely, which means understand dataset structure and its inner logic, meaning and type of every variable. 
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(stringr)
+
+df <- as_tibble(read.csv("../input/data-analyst-jobs/DataAnalyst.csv"))
+glimpse(df)
+```
+
+For instance, even after quickly scanning the data it became clear that “-1” in this case does not have any meaning therefore it transforms into NA.
+
+```{r}
+df[df == "-1"] <- NA
+```
+
+### Variable Transformation
+
+Next step in a data cleaning process will be variable transformation to make the data tidy. I think there are several points requiring clarification:
+
+Location variable contains mostly two indicators – city and state. According to tidy data principles, these values should be separated. However, there is one job location with three indicators – city, county and state. It is Greenwood Village, Arapahoe, CO case. Because there are only 8 observations with three indicators, it is convenient to remove second word for Arapahoe County. It leaves us with Greenwood Village, CO.
+
+Somehow Rating values had crawled into Company.Name column. It is better to remove them for clear data. There is no need for currency abbreviation in Revenue either.
+
+Salary.Estimate has too many levels to be a factor, so I got rid of text and brackets to make two numeric variables later – Low_bar.Salary and High_bar.Salary. With two new salary variables, it is possible to make future calculations like mean and median. 
+
+```{r}
+df <- df %>%
+  mutate(location = gsub(" Arapahoe,", "", Location),
+         cname = gsub("[[:digit:].[:digit:]]", "", Company.Name), 
+         salary_est = gsub("[\\$Ka-zA-Z\\(.*\\)]", "", Salary.Estimate),
+         revenue = gsub(" \\(.*\\)", "", Revenue),
+         job_title = tolower(Job.Title),
+         job_desc = tolower(Job.Description)) %>%
+  separate(salary_est, c("salary_low", "salary_high"), "-", convert = TRUE) %>%
+  separate(location, c("city", "state"), ",") %>% 
+  mutate_if(is.character, as.factor) %>% 
+  mutate_at(c(2,5), as.character) %>%
+  rename(id = X)
+```
+
+### To sum up:
+* Location has been transformed into two variables – "city" and "state".
+* Company.Name has been cleared from Rating values and changed to "cname".
+* Salary.Estimate has been cleared from Glassdoor references and transformed into two variables – "salary_low" and "salary_high"
+* Revenue has been cleared from currency abbreviation and changed to "revenue".
+* Variables types has been changed accordingly.
+* Column x has been renamed as “id”.
+
+## Analysis
+
+
+
+
+
+
+
+
+
+
+

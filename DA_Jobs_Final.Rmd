@@ -7,7 +7,13 @@ output: html_document
 
 Hi! My name is Inna Krivchenko and I am beginner analyst. I am looking for suitable job position now and would be happy to demonstrate my skills on "Data Analyst jobs”, which is an intriguing dataset of analyst vacancies from Glasdoor. As a beginner analyst, I am eager to find some useful insides answering several questions:
 
-Which jobs are the best judging by salary, company rating and location?
+* Which jobs are the best judging by salary, company rating and location?
+* What skills are required the most for the analyst position?
+* What salary can be expected, based on industry, location and company revenue?
+* Is there a difference among salaries in companies with different size?
+* Does the location have its part in salary level?
+* Is it harder to apply in companies with high rating score?
+* Is the apply procedure easier in companies with smaller revenue? 
 
 ## Cleaning data
 
@@ -64,7 +70,6 @@ df <- df %>%
 ```{r}
 glimpse(df)
 ```
-
 
 ## Analysis
 

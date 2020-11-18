@@ -50,6 +50,7 @@ df <- df %>%
          cname = gsub("[[:digit:].[:digit:]]", "", Company.Name), 
          salary_est = gsub("[\\$Ka-zA-Z\\(.*\\)]", "", Salary.Estimate),
          revenue = gsub(" \\(.*\\)", "", Revenue),
+         rating = as.numeric(Rating),
          job_title = tolower(Job.Title),
          job_desc = tolower(Job.Description)) %>%
   separate(salary_est, c("salary_low", "salary_high"), "-", convert = TRUE) %>%

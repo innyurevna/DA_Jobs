@@ -2,6 +2,7 @@ library(ggplot2)
 library(dplyr)
 library(tidyr)
 library(stringr)
+library(modeest)
 
 df <- as_tibble(read.csv("DataAnalyst.csv"))
 df[df == -1] <- NA
@@ -20,6 +21,8 @@ df <- df %>%
   mutate_if(is.character, as.factor) %>% 
   mutate_at(c(2,5), as.character) %>%
   rename(id = X)
+
+glimpse(df)
 
 test <- mutate(df, revenue = gsub(" \\(.*\\)", "", revenue))
 test2 <- mutate(df, rating = as.numeric(Rating))
@@ -45,20 +48,49 @@ df %>%
   summarise(salary_low, salary_high, state) %>% 
   arrange(-salary_high) 
 
-df %>% 
+# mode from package
+mlv(df$salary_high, method = "mfv", na.rm = T)
+mlv(df$salary_low, method = "mfv", na.rm = T)
+
+desc_df <- df %>% 
   group_by(state) %>% 
-  summarise(mean = mean(salary_high, na = T))
+  summarise(mean_salary_low = mean(salary_low, na.rm = T),
+            mean_salary_high = mean(salary_high, na.rm = T),
+            mean_rating = mean(rating, na.rm = T),
+            median_salary_low = median(salary_low, na.rm = T),
+            median_salary_high = median(salary_high, na.rm = T),
+            median_rating = median(rating, na.rm = T),
+            mode_salary_low = mlv(salary_low, method = "mfv", na.rm = T),
+            mode_salary_high = mlv(salary_high, method = "mfv", na.rm = T))
 
-# creating a mode function
-getmode <- function(x) {
-  uniqx <- unique(x)
-  uniqx[which.max(count(match(v, uniqx)))]}
+# What salary could be expected, based on industry, location and company revenue?
+model_1 <- lm(salary_high ~ state + revenue, data = df)
+summary(model_1)$coef
 
-df %>% 
-  group_by(state) %>% 
-  summarise(getmode(salary_high))
+model_2 <- lm(salary_low ~ state + revenue, data = df)
+summary(model_2)$coef
 
-getmode(df$salary_high)
+levels(df$Industry)
+
+model_1.2 <- lm(salary_high ~ Industry, data = df)
+summary(model_1.2)$coef
+
+# Is there a difference among salaries in companies with different size?
+class(df$Size)
+levels(df$Size)
+
+model_3 <- lm(salary_low ~ Size, data = df)
+summary(model_3)$coef
+
+model_4 <- lm(salary_high ~ Size, data = df)
+summary(model_3)$coef
+
+
+
+
+
+
+
 
 
 

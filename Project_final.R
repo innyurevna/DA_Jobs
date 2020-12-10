@@ -85,13 +85,32 @@ summary(model_3)$coef
 model_4 <- lm(salary_high ~ Size, data = df)
 summary(model_3)$coef
 
+# Is it harder to apply in companies with high rating score?
+levels(df$Easy.Apply)
+table(df$Easy.Apply, df)
+sum(is.na(df$Easy.Apply))
 
+# Do the sector, rating and type of ownership have their part in salary level?
+levels(df$Sector)
 
+model_5 <- lm(salary_high ~ Sector, data = df)
+summary(model_5)$coef
 
+model_6 <- lm(salary_low ~ Sector, data = df)
+summary(model_6)$coef
 
+levels(df$Type.of.ownership)
+model_7 <- lm(salary_high ~ Type.of.ownership, data = df)
+summary(model_7)$coef
 
+model_8 <- lm(salary_low ~ Type.of.ownership, data = df)
+summary(model_8)$coef
 
+model_9 <- lm(salary_high ~ rating, data= df)
+summary(model_9)$coef
 
+model_10 <- lm(salary_low ~ rating, data = df)
+summary(model_10)$coef
 
 
 

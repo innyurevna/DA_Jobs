@@ -49,10 +49,16 @@ df %>%
   group_by(state) %>% 
   summarise(mean = mean(salary_high, na = T))
 
+# creating a mode function
+getmode <- function(x) {
+  uniqx <- unique(x)
+  uniqx[which.max(count(match(v, uniqx)))]}
 
+df %>% 
+  group_by(state) %>% 
+  summarise(getmode(salary_high))
 
-
-
+getmode(df$salary_high)
 
 
 

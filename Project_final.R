@@ -4,6 +4,7 @@ library(tidyr)
 library(stringr)
 library(modeest)
 
+# Зачем as.tibble? Проще сразу read_csv()
 df <- as_tibble(read.csv("DataAnalyst.csv"))
 df[df == -1] <- NA
 glimpse(df)
@@ -18,7 +19,7 @@ df <- df %>%
          job_desc = tolower(Job.Description)) %>%
   separate(salary_est, c("salary_low", "salary_high"), "-", convert = TRUE) %>%
   separate(location, c("city", "state"), ",") %>% 
-  mutate_if(is.character, as.factor) %>% 
+  mutate_if(is.character, as.factor) %>% # возможно тоже сделать через mutate_at, чтобы не было 2 mutate
   mutate_at(c(2,5), as.character) %>%
   rename(id = X)
 

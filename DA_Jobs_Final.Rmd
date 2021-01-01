@@ -19,12 +19,12 @@ Hi! My name is Inna Krivchenko and I am beginner analyst. I am looking for suita
 
 As I have learned from different courses, it is important to make sure your data has right and useful format. It is also crucial for the future analysis results to look at your data closely, which means understand dataset structure and its inner logic, meaning and type of every variable. 
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 library(dplyr)
 library(tidyr)
 library(stringr)
 
-df <- as_tibble(read.csv("../input/data-analyst-jobs/DataAnalyst.csv"))
+df <- as_tibble(read.csv("DataAnalyst.csv"))
 glimpse(df)
 ```
 
@@ -74,8 +74,7 @@ glimpse(df)
 
 ## Analysis
 
-
-
+# test
 
 
 

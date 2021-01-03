@@ -16,9 +16,11 @@ df <- df %>%
          job_desc = tolower(`Job Description`)) %>%
   separate(salary_est, c("salary_low", "salary_high"), "-", convert = TRUE) %>%
   mutate(mean_salary = (salary_low + salary_high)/2,
+         mean_low = mean(salary_low, na.rm = T),
+         mean_high = mean(salary_high, na.rm = T),
          range_salary = salary_high - salary_low,
-         flags_low = ifelse(salary_low < mean_salary, 1, 0),
-         flags_high = ifelse(salary_high < mean_salary, 1, 0)) %>%
+         flags_low = ifelse(salary_low < mean_low, 1, 0),
+         flags_high = ifelse(salary_high < mean_high, 1, 0)) %>%
   separate(location, c("city", "state"), ",") %>% 
   mutate_if(is.character, as.factor) %>% #IDEA: возможно тоже сделать через mutate_at, чтобы не было 2 mutate
   mutate_at(c(2,5), as.character) %>%
@@ -29,6 +31,8 @@ view(df)
 #IDEA: добавить отдельной колонкой разницу между минимумом и максимумом (размах)
 #IDEA: добавить флаги: является ли нижняя/верхняя планка выше или ниже средней
 glimpse(df)
+
+mean(df$salary_low, na.rm = T)
 
 test <- mutate(df, revenue = gsub(" \\(.*\\)", "", revenue))
 test2 <- mutate(df, rating = as.numeric(Rating))

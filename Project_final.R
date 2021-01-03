@@ -1,27 +1,30 @@
-library(ggplot2)
-library(dplyr)
-library(tidyr)
+library(tidyverse)
 library(stringr)
 library(modeest)
 
-#QUESTION: Зачем as.tibble? Проще сразу read_csv()
-df <- as_tibble(read.csv("DataAnalyst.csv")) #FIXME: сделать путь идентичным Кегглу, т.е. добавить подпапку
+df <- read_csv("DataAnalyst.csv") #FIXME: сделать путь идентичным Кегглу, т.е. добавить подпапку
 df[df == -1] <- NA
 glimpse(df)
 
 df <- df %>%
   mutate(location = gsub(" Arapahoe,", "", Location),
-         cname = gsub("[[:digit:].[:digit:]]", "", Company.Name), 
-         salary_est = gsub("[\\$Ka-zA-Z\\(.*\\)]", "", Salary.Estimate),
+         cname = gsub("[[:digit:].[:digit:]]", "", `Company Name`), 
+         salary_est = gsub("[\\$Ka-zA-Z\\(.*\\)]", "", `Salary Estimate`),
          revenue = gsub(" \\(.*\\)", "", Revenue),
          rating = as.numeric(Rating),
-         job_title = tolower(Job.Title),
-         job_desc = tolower(Job.Description)) %>%
+         job_title = tolower(`Job Title`),
+         job_desc = tolower(`Job Description`)) %>%
   separate(salary_est, c("salary_low", "salary_high"), "-", convert = TRUE) %>%
+  mutate(mean_salary = (salary_low + salary_high)/2,
+         range_salary = salary_high - salary_low,
+         flags_low = ifelse(salary_low < mean_salary, 1, 0),
+         flags_high = ifelse(salary_high < mean_salary, 1, 0)) %>%
   separate(location, c("city", "state"), ",") %>% 
   mutate_if(is.character, as.factor) %>% #IDEA: возможно тоже сделать через mutate_at, чтобы не было 2 mutate
   mutate_at(c(2,5), as.character) %>%
-  rename(id = X)
+  rename(id = X1)
+view(df)
+
 #IDEA: добавить новую переменную как среднее арифметическое между salary_low и salary_high 
 #IDEA: добавить отдельной колонкой разницу между минимумом и максимумом (размах)
 #IDEA: добавить флаги: является ли нижняя/верхняя планка выше или ниже средней

@@ -14,6 +14,7 @@ Hi! My name is Inna Krivchenko and I am beginner analyst. I am looking for suita
 * Does the location have its part in salary level?
 * Is it harder to apply in companies with high rating score?
 * Is the apply procedure easier in companies with smaller revenue? 
+* Which tools/skills/technologies lead to higher salaries?
 
 ## Cleaning data
 
@@ -28,7 +29,7 @@ df <- as_tibble(read.csv("DataAnalyst.csv"))
 glimpse(df)
 ```
 
-For instance, even after quickly scanning the data it became clear that “-1” in this case does not have any meaning therefore it transforms into NA.
+For instance, even after quick scan of the data it became clear that “-1” in this case does not have any meaning therefore it transforms into NA.
 
 ```{r}
 df[df == "-1"] <- NA
@@ -36,7 +37,7 @@ df[df == "-1"] <- NA
 
 ### Variable Transformation
 
-Next step in a data cleaning process will be variable transformation to make the data tidy. I think there are several points requiring clarification:
+Next step in a data cleaning process will be variable transformation to make the data tidy. Here are some points requiring clarification:
 
 Location variable contains mostly two indicators – city and state. According to tidy data principles, these values should be separated. However, there is one job location with three indicators – city, county and state. It is Greenwood Village, Arapahoe, CO case. Because there are only 8 observations with three indicators, it is convenient to remove second word for Arapahoe County. It leaves us with Greenwood Village, CO.
 

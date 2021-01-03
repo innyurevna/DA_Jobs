@@ -4,8 +4,8 @@ library(tidyr)
 library(stringr)
 library(modeest)
 
-# Зачем as.tibble? Проще сразу read_csv()
-df <- as_tibble(read.csv("DataAnalyst.csv"))
+#QUESTION: Зачем as.tibble? Проще сразу read_csv()
+df <- as_tibble(read.csv("DataAnalyst.csv")) #FIXME: сделать путь идентичным Кегглу, т.е. добавить подпапку
 df[df == -1] <- NA
 glimpse(df)
 
@@ -19,10 +19,12 @@ df <- df %>%
          job_desc = tolower(Job.Description)) %>%
   separate(salary_est, c("salary_low", "salary_high"), "-", convert = TRUE) %>%
   separate(location, c("city", "state"), ",") %>% 
-  mutate_if(is.character, as.factor) %>% # возможно тоже сделать через mutate_at, чтобы не было 2 mutate
+  mutate_if(is.character, as.factor) %>% #IDEA: возможно тоже сделать через mutate_at, чтобы не было 2 mutate
   mutate_at(c(2,5), as.character) %>%
   rename(id = X)
-
+#IDEA: добавить новую переменную как среднее арифметическое между salary_low и salary_high 
+#IDEA: добавить отдельной колонкой разницу между минимумом и максимумом (размах)
+#IDEA: добавить флаги: является ли нижняя/верхняя планка выше или ниже средней
 glimpse(df)
 
 test <- mutate(df, revenue = gsub(" \\(.*\\)", "", revenue))
@@ -32,7 +34,7 @@ df %>% filter(str_detect(location, "Arapahoe")) -> case
 
 # Analysis
 
-install.packages("todor")
+# install.packages("todor")
 # TODO: SOMETHING
 
 #Analysis

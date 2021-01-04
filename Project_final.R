@@ -7,8 +7,8 @@ df[df == -1] <- NA
 glimpse(df)
 
 df <- df %>%
-  mutate(location = gsub(" Arapahoe,", "", Location),
-         cname = gsub("[[:digit:].[:digit:]]", "", `Company Name`), 
+ mutate(location = gsub(" Arapahoe,", "", Location),
+         cname = gsub("[[:digit:].[:digit:]]", "", `Company Name`),
          salary_est = gsub("[\\$Ka-zA-Z\\(.*\\)]", "", `Salary Estimate`),
          revenue = gsub(" \\(.*\\)", "", Revenue),
          rating = as.numeric(Rating),
@@ -24,7 +24,8 @@ df <- df %>%
   separate(location, c("city", "state"), ",") %>% 
   mutate_if(is.character, as.factor) %>% #IDEA: возможно тоже сделать через mutate_at, чтобы не было 2 mutate
   mutate_at(c(2,5), as.character) %>%
-  rename(id = X1)
+  rename(id = X1) %>% 
+  select(!c(Location, `Company Name`, `Salary Estimate`, Revenue, Rating, `Job Title`, `Job Description`))
 view(df)
 
 #IDEA: добавить новую переменную как среднее арифметическое между salary_low и salary_high 
@@ -52,6 +53,9 @@ df %>%
   group_by(rating) %>% 
   summarise(salary_low, salary_high, state) %>% 
   arrange(-rating)
+
+ggplot(df, aes(x = state, y = salary_low, group = rating))+
+  geom_point()
 
 df %>% 
   group_by(rating) %>% 

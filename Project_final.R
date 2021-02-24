@@ -1,6 +1,10 @@
+install.packages("tidytext")
+
 library(tidyverse)
 library(stringr)
 library(modeest)
+library(topicmodels)
+library(tidytext)
 
 df <- read_csv("DataAnalyst.csv") #FIXME: сделать путь идентичным Кегглу, т.е. добавить подпапку
 df[df == -1] <- NA
@@ -23,7 +27,7 @@ df <- df %>%
          flags_high = ifelse(salary_high < mean_high, 1, 0)) %>%
   separate(location, c("city", "state"), ",") %>% 
   mutate_if(is.character, as.factor) %>% #IDEA: возможно тоже сделать через mutate_at, чтобы не было 2 mutate
-  mutate_at(c(2,5), as.character) %>%
+  mutate_at(c(17,18), as.character) %>%
   rename(id = X1) %>% 
   select(!c(Location, `Company Name`, `Salary Estimate`, Revenue, Rating, `Job Title`, `Job Description`))
 view(df)
@@ -126,10 +130,14 @@ summary(model_9)$coef
 model_10 <- lm(salary_low ~ rating, data = df)
 summary(model_10)$coef
 
+#text     
+tidy_df <- df %>%
+  select(job_desc)%>%
+  mutate(job_desc = as.character(job_desc)) %>%
+  unnest_tokens(word, job_desc) %>% 
+  anti_join(stop_words)
 
-
-
-
-
-
+word_count <- tidy_df %>%
+  filter(n > 500) %>%
+  arrange(desc(n))
 

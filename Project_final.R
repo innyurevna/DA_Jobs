@@ -150,7 +150,12 @@ custom_stop_words <- tribble(
   "analyst", "CUSTOM",
   "analytical", "CUSTOM",
   "analytics", "CUSTOM",
-  "analysis", "CUSTOM"
+  "analysis", "CUSTOM",
+  "including", "CUSTOM",
+  "requared", "CUSTOM",
+  "requarements", "CUSTOM",
+  "job", "CUSTOM",
+  "reports", "CUSTOM"
   )
 stop_word2 <- stop_words %>%
   bind_rows(custom_stop_words)
@@ -161,11 +166,18 @@ tidy_df2 <- df %>%
   unnest_tokens(word, job_desc) %>% 
   anti_join(stop_word2)
 
-word_count2 <- tidy_df %>%
+word_count2 <- tidy_df2 %>%
   count(word) %>%
   filter(n > 1000) %>%
   mutate(word2 = fct_reorder(word, n))
 
+tidy_df3 <- tidy_df2 %>%
+  count(word) %>%
+  top_n(20, n)
 
+word_count3 <- tidy_df3 %>%
+  count(word) %>%
+  filter(n > 500) %>%
+  mutate(word2 = fct_reorder(word, n))
 
 

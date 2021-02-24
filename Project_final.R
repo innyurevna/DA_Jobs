@@ -132,12 +132,40 @@ summary(model_10)$coef
 
 #text     
 tidy_df <- df %>%
-  select(job_desc)%>%
+  select(Sector, state, job_title, job_desc)%>%
   mutate(job_desc = as.character(job_desc)) %>%
   unnest_tokens(word, job_desc) %>% 
   anti_join(stop_words)
 
 word_count <- tidy_df %>%
-  filter(n > 500) %>%
-  arrange(desc(n))
+  count(word) %>%
+  filter(n > 1000) %>%
+  mutate(word2 = fct_reorder(word, n))
+
+custom_stop_words <- tribble(
+  ~word, ~lexicon,
+  "3", "CUSTOM",
+  "data", "CUSTOM",
+  "skills", "CUSTOM",
+  "analyst", "CUSTOM",
+  "analytical", "CUSTOM",
+  "analytics", "CUSTOM",
+  "analysis", "CUSTOM"
+  )
+stop_word2 <- stop_words %>%
+  bind_rows(custom_stop_words)
+
+tidy_df2 <- df %>%
+  select(Sector, state, job_title, job_desc)%>%
+  mutate(job_desc = as.character(job_desc)) %>%
+  unnest_tokens(word, job_desc) %>% 
+  anti_join(stop_word2)
+
+word_count2 <- tidy_df %>%
+  count(word) %>%
+  filter(n > 1000) %>%
+  mutate(word2 = fct_reorder(word, n))
+
+
+
 

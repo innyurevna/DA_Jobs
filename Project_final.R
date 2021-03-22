@@ -1,4 +1,4 @@
-install.packages("tidytext")
+# install.packages("tidytext")
 
 library(tidyverse)
 library(stringr)
@@ -8,9 +8,9 @@ library(tidytext)
 
 df <- read_csv("DataAnalyst.csv") #FIXME: сделать путь идентичным Кегглу, т.е. добавить подпапку
 df[df == -1] <- NA
-glimpse(df)
+# glimpse(df)
 
-df <- df %>%
+df %<>%
  mutate(location = gsub(" Arapahoe,", "", Location),
          cname = gsub("[[:digit:].[:digit:]]", "", `Company Name`),
          salary_est = gsub("[\\$Ka-zA-Z\\(.*\\)]", "", `Salary Estimate`),
@@ -44,7 +44,8 @@ test2 <- mutate(df, rating = as.numeric(Rating))
 glimpse(test2)
 df %>% filter(str_detect(location, "Arapahoe")) -> case
 
-# Analysis
+
+# Analysis ----------------------------------------------------------------
 
 # install.packages("todor")
 # TODO: SOMETHING
@@ -130,7 +131,10 @@ summary(model_9)$coef
 model_10 <- lm(salary_low ~ rating, data = df)
 summary(model_10)$coef
 
-#text     
+
+# Text Analysis -----------------------------------------------------------
+
+# Tokenization and stop words removal
 tidy_df <- df %>%
   select(Sector, state, job_title, job_desc)%>%
   mutate(job_desc = as.character(job_desc)) %>%
@@ -140,7 +144,8 @@ tidy_df <- df %>%
 word_count <- tidy_df %>%
   count(word) %>%
   filter(n > 1000) %>%
-  mutate(word2 = fct_reorder(word, n))
+  mutate(word2 = fct_reorder(word, n)) %>% 
+  arrange(desc(n))
 
 custom_stop_words <- tribble(
   ~word, ~lexicon,
@@ -157,6 +162,7 @@ custom_stop_words <- tribble(
   "job", "CUSTOM",
   "reports", "CUSTOM"
   )
+
 stop_word2 <- stop_words %>%
   bind_rows(custom_stop_words)
 
@@ -169,15 +175,49 @@ tidy_df2 <- df %>%
 word_count2 <- tidy_df2 %>%
   count(word) %>%
   filter(n > 1000) %>%
-  mutate(word2 = fct_reorder(word, n))
+  mutate(word2 = fct_reorder(word, n)) %>% 
+  arrange(desc(n))
 
 tidy_df3 <- tidy_df2 %>%
   count(word) %>%
-  top_n(20, n)
+  top_n(50, n)
 
-word_count3 <- tidy_df3 %>%
+word_count3 <- tidy_df2 %>%
   count(word) %>%
   filter(n > 500) %>%
-  mutate(word2 = fct_reorder(word, n))
+  mutate(word2 = fct_reorder(word, n)) %>% 
+  arrange(desc(n))
+
+#New variables for skills detection
+
+df <- df %>% 
+  mutate(R_skill = str_detect(job_desc, regex(" r|r ", ignore_case = TRUE)),
+         Python_skill = str_detect(job_desc, regex("python", ignore_case = TRUE)),
+         sql_skill = str_detect(job_desc, regex("sql", ignore_case = TRUE)),
+         excel_skill = str_detect(job_desc, regex("excel", ignore_case = TRUE)),
+         tableau_skill = str_detect(job_desc, regex("tableau", ignore_case = TRUE)),
+         java_skill = str_detect(job_desc, regex("java", ignore_case = TRUE))
+  )
+
+view(df)
+
+df$job_desc[4]
+
+my_vector <- c("we need r", "a r is a language", "bird", "rum", "or")
+str_detect(my_vector, " r|r ")
+
+new_test <- str_split(df$job_desc[4], " ")
+
+class(new_test)
+
+nt <- lapply(new_test, str_detect, " r|r ")
+
+table(nt) 
+
+str_detect(df$job_desc[4], " r|r ")
+
+
+
+
 
 

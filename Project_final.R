@@ -203,7 +203,7 @@ view(df)
 
 df$job_desc[4]
 
-my_vector <- c("we need r", "a r is a language", "bird", "rum", "or")
+my_vector <- c("we need r", "i'm telling you r is a language", "bird", "rum", "or")
 str_detect(my_vector, " r|r ")
 
 new_test <- str_split(df$job_desc[4], " ")

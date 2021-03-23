@@ -12,7 +12,7 @@ df[df == -1] <- NA
 
 df %<>%
  mutate(location = gsub(" Arapahoe,", "", Location),
-         cname = gsub("[\\d.\\d", "", `Company Name`),
+         cname = gsub("\\d.\\d", "", `Company Name`),
          salary_est = gsub("[\\$Ka-zA-Z\\(.*\\)]", "", `Salary Estimate`),
          revenue = gsub(" \\(.*\\)", "", Revenue),
          rating = as.numeric(Rating),

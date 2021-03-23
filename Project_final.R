@@ -191,20 +191,20 @@ word_count3 <- tidy_df2 %>%
 #New variables for skills detection
 
 df <- df %>% 
-  mutate(R_skill = str_detect(job_desc, regex(" r|r ", ignore_case = TRUE)),
-         Python_skill = str_detect(job_desc, regex("python", ignore_case = TRUE)),
-         sql_skill = str_detect(job_desc, regex("sql", ignore_case = TRUE)),
-         excel_skill = str_detect(job_desc, regex("excel", ignore_case = TRUE)),
-         tableau_skill = str_detect(job_desc, regex("tableau", ignore_case = TRUE)),
-         java_skill = str_detect(job_desc, regex("java", ignore_case = TRUE))
+  mutate(R_skill = str_detect(job_desc, " r|r "),
+         Python_skill = str_detect(job_desc, "python"),
+         sql_skill = str_detect(job_desc, "sql"),
+         excel_skill = str_detect(job_desc, "excel"),
+         tableau_skill = str_detect(job_desc, "tableau"),
+         java_skill = str_detect(job_desc, "java")
   )
 
 view(df)
 
 df$job_desc[4]
 
-my_vector <- c("we need r", "i'm telling you r is a language", "bird", "rum", "or")
-str_detect(my_vector, " r|r ")
+my_vector <- c("we need r", "i'm telling you r is a language", "bird", "rum", "or", "tr")
+table(str_detect(my_vector, " r|r "))
 
 new_test <- str_split(df$job_desc[4], " ")
 
@@ -214,7 +214,16 @@ nt <- lapply(new_test, str_detect, " r|r ")
 
 table(nt) 
 
-str_detect(df$job_desc[4], " r|r ")
+table(str_detect(df$job_desc[4], " r|r "))
+
+my_fun <- function(x){
+  x1 <- str_split(x, " ")
+  X2 <- lapply(x1, str_detect, " r|r ")
+  ifelse(x2 %in% TRUE, TRUE, FALSE)
+}
+
+table(str_detect(df$job_desc, " r|r "))
+
 
 
 

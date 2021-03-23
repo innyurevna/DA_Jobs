@@ -204,7 +204,7 @@ view(df)
 df$job_desc[4]
 
 my_vector <- c("we need r", "i'm telling you r is a language", "bird", "rum", "or", "tr")
-table(str_detect(my_vector, " r|r "))
+str_detect(my_vector, " r|r ")
 
 new_test <- str_split(df$job_desc[4], " ")
 
@@ -216,13 +216,13 @@ table(nt)
 
 table(str_detect(df$job_desc[4], " r|r "))
 
-my_fun <- function(x){
-  x1 <- str_split(x, " ")
-  X2 <- lapply(x1, str_detect, " r|r ")
-  ifelse(x2 %in% TRUE, TRUE, FALSE)
-}
 
-table(str_detect(df$job_desc, " r|r "))
+
+
+
+
+
+
 
 
 

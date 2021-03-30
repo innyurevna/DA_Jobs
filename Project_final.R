@@ -191,7 +191,7 @@ word_count3 <- tidy_df2 %>%
 #New variables for skills detection
 
 df <- df %>% 
-  mutate(R_skill = str_detect(job_desc, " r|r "),
+  mutate(R_skill = str_detect(job_desc, "\\s[rR](\\s|,|$)"),
          Python_skill = str_detect(job_desc, "python"),
          sql_skill = str_detect(job_desc, "sql"),
          excel_skill = str_detect(job_desc, "excel"),
@@ -204,7 +204,7 @@ view(df)
 df$job_desc[4]
 
 my_vector <- c("we need r", "i'm telling you r is a language", "bird", "rum", "or", "tr")
-str_detect(my_vector, " r|r ")
+str_detect(my_vector, "\\s[rR](\\s|,|$)")
 
 new_test <- str_split(df$job_desc[4], " ")
 
@@ -217,7 +217,7 @@ table(nt)
 table(str_detect(df$job_desc[4], " r|r "))
 
 
-
+df$job_desc[8]
 
 
 

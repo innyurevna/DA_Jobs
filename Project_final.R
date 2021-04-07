@@ -1,10 +1,11 @@
 # install.packages("tidytext")
-
+#install.packages("reactable")
 library(tidyverse)
 library(stringr)
 library(modeest)
 library(topicmodels)
 library(tidytext)
+library(reactable)
 
 df <- read_csv("DataAnalyst.csv") #FIXME: сделать путь идентичным Кегглу, т.е. добавить подпапку
 df[df == -1] <- NA

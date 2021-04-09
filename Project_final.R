@@ -7,6 +7,8 @@ library(topicmodels)
 library(tidytext)
 library(reactable)
 
+# Data Preparation -----------------------------------------------------------
+
 df <- read_csv("DataAnalyst.csv") #FIXME: сделать путь идентичным Кегглу, т.е. добавить подпапку
 df[df == -1] <- NA
 # glimpse(df)
@@ -83,6 +85,25 @@ desc_df <- df %>%
             mode_salary_low = mlv(salary_low, method = "mfv", na.rm = T),
             mode_salary_high = mlv(salary_high, method = "mfv", na.rm = T))
 
+#New variables for skills detection
+
+df <- df %>% 
+  mutate(R_skill = str_detect(job_desc, "\\s[rR](\\s|,|$)"),
+         Python_skill = str_detect(job_desc, "python"),
+         sql_skill = str_detect(job_desc, "sql"),
+         excel_skill = str_detect(job_desc, "excel"),
+         tableau_skill = str_detect(job_desc, "tableau"),
+         java_skill = str_detect(job_desc, "java"))
+
+table(df$R_skill)
+table(df$Python_skill)
+table(df$sql_skill)
+table(df$java_skill)
+table(df$excel_skill) 
+table(df$tableau_skill)
+
+# Statistical Models --------------------------------------------------------
+         
 # What salary could be expected, based on industry, location and company revenue?
 model_1 <- lm(salary_high ~ state + revenue, data = df)
 summary(model_1)$coef
@@ -189,36 +210,47 @@ word_count3 <- tidy_df2 %>%
   mutate(word2 = fct_reorder(word, n)) %>% 
   arrange(desc(n))
 
-#New variables for skills detection
+# Tables ---------------------------------------------------------------------
 
-df <- df %>% 
-  mutate(R_skill = str_detect(job_desc, "\\s[rR](\\s|,|$)"),
-         Python_skill = str_detect(job_desc, "python"),
-         sql_skill = str_detect(job_desc, "sql"),
-         excel_skill = str_detect(job_desc, "excel"),
-         tableau_skill = str_detect(job_desc, "tableau"),
-         java_skill = str_detect(job_desc, "java")
-  )
+reactable(desc_df, columns = list(
+  state = colDef(name = "State"),
+  mean_salary_low = colDef(name = "Low Bar Salary Mean", format = colFormat(separators = TRUE, digits = 0)),
+  median_salary_low = colDef(name = "Low Bar Salary Median"),
+  mode_salary_low = colDef(name = "Low Bar Salary Mode"),
+  mean_salary_high = colDef(name = "High Bar Salary", format = colFormat(separators = TRUE, digits = 0)),
+  median_salary_high = colDef(name = "High Bar Salary Median"),
+  mode_salary_high = colDef(name = "High Bar Salary Mode"),
+  mean_rating = colDef(name = "Mean Rating", format = colFormat(separators = TRUE, digits = 0)),
+  median_rating = colDef(name = "Median Rating")
+ ))
 
-view(df)
+ggplot(df, aes(x = salary_low))+
+  geom_density()
 
-df$job_desc[4]
+ggplot(df, aes(x = salary_high)) +
+  geom_density()+
+  geom_vline(aes(xintercept = mean(salary_high, na.rm = T)),
+             linetype = "dashed")
 
-my_vector <- c("we need r", "i'm telling you r is a language", "bird", "rum", "or", "tr")
-str_detect(my_vector, "\\s[rR](\\s|,|$)")
+# Map Visualisation ------------------------------------------------
 
-new_test <- str_split(df$job_desc[4], " ")
+install.packages("highcharter")
+library(highcharter)
 
-class(new_test)
-
-nt <- lapply(new_test, str_detect, " r|r ")
-
-table(nt) 
-
-table(str_detect(df$job_desc[4], " r|r "))
+hcmap("countries/us/us-all") %>%
+  hc_title(text = "USA States") 
 
 
-df$job_desc[8]
+hcmap("countries/nz/nz-all")
+
+install.packages("tmap")
+library(tmap) 
+
+
+
+
+
+
 
 
 

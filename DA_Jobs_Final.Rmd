@@ -16,9 +16,9 @@ Hi! My name is Inna Krivchenko and I am beginner analyst. I am looking for suita
 * Is the apply procedure easier in companies with smaller revenue? 
 * Which tools/skills/technologies lead to higher salaries?
 
-## Cleaning data
+## Cleaning the data
 
-As I have learned from different courses, it is important to make sure your data has right and useful format. It is also crucial for the future analysis results to look at your data closely, which means understand dataset structure and its inner logic, meaning and type of every variable. 
+As I have learned from different courses, it is important to make sure your data has right and useful format. It is also crucial for the future analysis results to look at your data closely, which means understand dataset structure and its inner logic, as well as types of different variables. 
 
 ```{r message=FALSE, warning=FALSE}
 library(dplyr)

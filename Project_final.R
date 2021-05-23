@@ -29,6 +29,7 @@ df %<>%
          flags_low = ifelse(salary_low < mean_low, 1, 0),
          flags_high = ifelse(salary_high < mean_high, 1, 0)) %>%
   separate(location, c("city", "state"), ",") %>% 
+  mutate(state = gsub("\\s", "", state)) %>% 
   mutate_if(is.character, as.factor) %>% #IDEA: возможно тоже сделать через mutate_at, чтобы не было 2 mutate
   mutate_at(c(17,18), as.character) %>%
   rename(id = X1) %>% 
@@ -210,7 +211,7 @@ word_count3 <- tidy_df2 %>%
   mutate(word2 = fct_reorder(word, n)) %>% 
   arrange(desc(n))
 
-# Tables ---------------------------------------------------------------------
+# Tables and charts---------------------------------------------------------------------
 
 reactable(desc_df, columns = list(
   state = colDef(name = "State"),
@@ -232,24 +233,35 @@ ggplot(df, aes(x = salary_high)) +
   geom_vline(aes(xintercept = mean(salary_high, na.rm = T)),
              linetype = "dashed")
 
-# Map Visualisation ------------------------------------------------
+# Map Visualization ------------------------------------------------
 
-install.packages("highcharter")
+#install.packages("highcharter")
+#install.packages("spData")
+#install.packages("tmap")
+#install.packages("usmap")
+
 library(highcharter)
+library(sf)
+library(tmap)
+library(spData)
+library(usmap)
+library(tidyverse)
 
 hcmap("countries/us/us-all") %>%
   hc_title(text = "USA States") 
 
-
 hcmap("countries/nz/nz-all")
 
-install.packages("tmap")
-library(tmap) 
-
-
-
-
-
+df_gr <- df %>% 
+  select(mean_salary, state) %>% 
+  group_by(state) %>% 
+  summarise(average = mean(mean_salary))
+  
+plot_usmap(data = df_gr, values = "average", color = "black")+
+  scale_fill_continuous(low = "lightgrey", high = "darkgreen", 
+                         guide = "colorbar", na.value = "white",
+                         name = "Average Salary", label = scales::comma) +
+  theme(legend.position = "right")
 
 
 
